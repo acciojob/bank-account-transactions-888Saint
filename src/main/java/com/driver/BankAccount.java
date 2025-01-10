@@ -14,15 +14,44 @@ public class BankAccount {
 
     public void deposit(double amount) {
        // your code goes here
+
+        lock.lock();
+
+        try{
+            if (amount > 0) {
+                balance += amount;
+                System.out.println("Deposited : $" + amount + " | Current Balance: $" + balance);
+            }
+        }finally {
+            lock.unlock();
+        }
+
     }
 
     public void withdraw(double amount) {
         // your code goes here
+        lock.lock();
+
+        try{
+            if (amount > 0 && balance >= amount) {
+                balance -= amount;
+                System.out.println("Withdrawn : $" + amount + " | Current Balance: $" + balance);
+            } else if (amount > 0) {
+                System.out.println("Withdrawal of $" + amount + " failed. Insufficient funds");
+            }
+        }finally {
+            lock.unlock();
+        }
     }
 
     public double getBalance() {
     	// your code goes here
-        return balance;
+        lock.lock();
+        try {
+            return balance;
+        }finally {
+            lock.unlock();
+        }
     }
 
     public static void main(String[] args) {
